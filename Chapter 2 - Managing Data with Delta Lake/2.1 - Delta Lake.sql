@@ -4,7 +4,15 @@
 
 -- COMMAND ----------
 
-USE CATALOG hive_metastore
+USE CATALOG hive_metastore;
+
+-- COMMAND ----------
+
+create database if not exists e_mart;
+
+-- COMMAND ----------
+
+use database e_mart;
 
 -- COMMAND ----------
 
@@ -55,7 +63,7 @@ DESCRIBE DETAIL product_info
 
 -- COMMAND ----------
 
--- MAGIC %fs ls 'dbfs:/user/hive/warehouse/product_info'
+-- MAGIC %fs ls 'dbfs:/user/hive/warehouse/e_mart.db/product_info'
 
 -- COMMAND ----------
 
@@ -70,7 +78,7 @@ WHERE product_id = 3
 
 -- COMMAND ----------
 
--- MAGIC %fs ls 'dbfs:/user/hive/warehouse/product_info'
+-- MAGIC %fs ls 'dbfs:/user/hive/warehouse/e_mart.db/product_info'
 
 -- COMMAND ----------
 
@@ -87,11 +95,11 @@ DESCRIBE HISTORY product_info
 
 -- COMMAND ----------
 
--- MAGIC %fs ls 'dbfs:/user/hive/warehouse/product_info/_delta_log'
+-- MAGIC %fs ls 'dbfs:/user/hive/warehouse/e_mart.db/product_info/_delta_log/'
 
 -- COMMAND ----------
 
--- MAGIC %fs head 'dbfs:/user/hive/warehouse/product_info/_delta_log/00000000000000000003.json'
+-- MAGIC %fs head 'dbfs:/user/hive/warehouse/e_mart.db/product_info/_delta_log/00000000000000000000.json'
 
 -- COMMAND ----------
 
@@ -109,11 +117,16 @@ DESCRIBE HISTORY product_info
 
 -- COMMAND ----------
 
-SELECT * FROM product_info VERSION AS OF 2
+-- This is current state (Latest version) of product_info table. 
+SELECT * FROM product_info order by product_id;
 
 -- COMMAND ----------
 
-SELECT * FROM product_info@v2
+SELECT * FROM product_info VERSION AS OF 2 order by product_id;
+
+-- COMMAND ----------
+
+SELECT * FROM product_info@v2 order by product_id;
 
 -- COMMAND ----------
 
@@ -127,6 +140,10 @@ DELETE FROM product_info
 -- COMMAND ----------
 
 DESCRIBE HISTORY product_info
+
+-- COMMAND ----------
+
+select * from product_info;
 
 -- COMMAND ----------
 
@@ -174,7 +191,7 @@ DESCRIBE HISTORY product_info
 
 -- COMMAND ----------
 
--- MAGIC %fs ls 'dbfs:/user/hive/warehouse/product_info'
+-- MAGIC %fs ls 'dbfs:/user/hive/warehouse/e_mart.db/product_info'
 
 -- COMMAND ----------
 
@@ -182,7 +199,7 @@ VACUUM product_info
 
 -- COMMAND ----------
 
--- MAGIC %fs ls 'dbfs:/user/hive/warehouse/product_info'
+-- MAGIC %fs ls 'dbfs:/user/hive/warehouse/e_mart.db/product_info'
 
 -- COMMAND ----------
 
@@ -198,7 +215,7 @@ VACUUM product_info RETAIN 0 HOURS
 
 -- COMMAND ----------
 
--- MAGIC %fs ls 'dbfs:/user/hive/warehouse/product_info'
+-- MAGIC %fs ls 'dbfs:/user/hive/warehouse/e_mart.db/product_info'
 
 -- COMMAND ----------
 
@@ -215,4 +232,16 @@ DROP TABLE product_info
 
 -- COMMAND ----------
 
--- MAGIC %fs ls 'dbfs:/user/hive/warehouse/product_info'
+-- MAGIC %fs ls 'dbfs:/user/hive/warehouse/e_mart.db/product_info'
+
+-- COMMAND ----------
+
+DROP DATABASE e_mart;
+
+-- COMMAND ----------
+
+show databases;
+
+-- COMMAND ----------
+
+
